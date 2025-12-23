@@ -1,0 +1,11 @@
+fastapi==0.109.0
+uvicorn==0.27.0
+transformers==4.37.0
+torch==2.1.2 --index-url https://download.pytorch.org/whl/cpu
+
+fastapi
+uvicorn
+pydantic
+transformers
+torch
+numpy<2

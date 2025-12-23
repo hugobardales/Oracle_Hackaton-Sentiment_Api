@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # 1. Backend Java (Spring Boot)
+  backend-java:
+    build: ./backend-java
+    container_name: backend-java
+    ports:
+      - "8080:8080"
+    environment:
+      # Conexión a la IA (Puerto 8000)
+      - AI_SERVICE_URL=http://ai-service:8000
+      # NOTA: Al no definir SPRING_DATASOURCE_URL aquí, Spring Boot usará
+      # la configuración de application.yaml (H2 en memoria).
+    depends_on:
+      ai-service:
+        condition: service_started
+    networks:
+      - hackathon-net
+
+  # 2. Servicio de IA (Python FastAPI)
+  ai-service:
+    build: ./ai-service
+    container_name: ai-service
+    ports:
+      - "8000:8000"
+    # Comando forzando puerto 8000
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    networks:
+      - hackathon-net
+
+  # 3. Frontend (Streamlit)
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_URL=http://backend-java:8080
+    depends_on:
+      - backend-java
+    networks:
+      - hackathon-net
+
+networks:
+  hackathon-net:
+    driver: bridge
+
+# Volumes ya no son necesarios sin Oracle, pero se pueden dejar si se agregan otros servicios

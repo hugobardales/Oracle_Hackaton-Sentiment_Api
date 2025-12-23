@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: SentimentAPI
+
+  # --- CONFIGURACIÓN H2 (Temporal para que arranque YA) ---
+  datasource:
+    url: jdbc:h2:mem:sentimentdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+
+  h2:
+    console:
+      enabled: true # Podrás ver la DB en http://localhost:8080/h2-console
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+  # ---------------------------------------------------------
+
+# Tu configuración de IA se queda igual, ¡está perfecta!
+ai:
+  service:
+    url: ${AI_SERVICE_URL:http://localhost:8000}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
